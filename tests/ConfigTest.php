@@ -25,42 +25,27 @@
  */
 
 declare(strict_types=1);
-
-namespace Tests\Enjoys\Config;
-
 /**
- * Description of YAMLTest
+ * Description of ConfigTest
  *
  * @author Enjoys
  */
-class YAMLTest extends \PHPUnit\Framework\TestCase
+class ConfigTest extends PHPUnit\Framework\TestCase
 {
-
     public function test1()
     {
-        $config = 'foo: bar';
-        $parser = new \Enjoys\Config\Parse\YAML($config);
-        $this->assertSame('bar', $parser->parse()['foo']);
-    }
-
-    public function test2()
-    {
-        $parser = new \Enjoys\Config\Parse\YAML(__DIR__ . '/../fixtures/yaml/yaml1.yml');
-        $this->assertSame('d', $parser->parse()['a']['b']);
-    }
-
-    public function test3()
-    {
-        $this->expectException(\Enjoys\Config\ParseException::class);
-        $parser = new \Enjoys\Config\Parse\YAML(__DIR__ . '/../fixtures/yaml/yaml2.yml');
-        $parser->parse();
+        $config = new Enjoys\Config\Config();
+        $config->addConfig('foo = bar');
+        $this->assertSame(['foo' => 'bar'], $config->getConfig());
+        $this->assertSame('bar', $config->getConfig('foo'));
+        $this->assertSame(false, $config->getConfig('baz', false));
     }
     
-    public function test4()
+    
+    public function test2()
     {
-        $this->expectException(\Enjoys\Config\ParseException::class);
-        $config = "foo: bar\n    baz\nzed";
-        $parser = new \Enjoys\Config\Parse\YAML($config);
-        $parser->parse();
-    }    
+        $this->expectException(\Exception::class);
+        $config = new Enjoys\Config\Config();
+        $config->addConfig('foo = bar', [], 'InvalidClass');
+    }
 }

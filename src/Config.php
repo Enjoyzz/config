@@ -80,9 +80,9 @@ class Config
             return $this->config[$key];
         }
 
-        if (is_object($this->config) && property_exists($this->config, $key)) {
-            return $this->config->$key;
-        }
+//        if (is_object($this->config) && property_exists($this->config, $key)) {
+//            return $this->config->$key;
+//        }
 
         return $default;
     }
