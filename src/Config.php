@@ -35,46 +35,56 @@ namespace Enjoys\Config;
  */
 class Config
 {
+
+    public const YAML = Parse\YAML::class;
+    public const INI = Parse\INI::class;
+    public const JSON = Parse\Json::class;
+    public const XML = Parse\XML::class;
+
     /**
      *
      * @var mixed
      */
     private $config = [];
-    
+
     public function __construct()
     {
         
     }
-    
-    public function addConfig(string $config, array $options = [], string $parseClass = Parse\INI::class): void
+
+    public function addConfig(string $config, array $options = [], string $parseClass = self::INI): void
     {
-        if(!class_exists($parseClass)){
-            throw new \Exception('Not isset parse class');
+        if (!class_exists($parseClass)) {
+            throw new \Exception(sprintf('Not found parse class: %s', $parseClass));
         }
 
         $parser = new $parseClass($config);
         $parser->setOptions($options);
-        $this->config = $parser->parse();
+        $result  = $parser->parse();
+        
+        if(is_array($result)){
+            $this->config = array_merge($this->config, $result);
+        }
     }
-    
+
     /**
      * 
      * @return mixed
      */
     public function getConfig($key = null, $default = null)
     {
-        if($key === null){
+        if ($key === null) {
             return $this->config;
         }
-        
-        if(is_array($this->config) && array_key_exists($key, $this->config)){
+
+        if (is_array($this->config) && array_key_exists($key, $this->config)) {
             return $this->config[$key];
         }
-        
-        if(is_object($this->config) && property_exists($this->config, $key)){
+
+        if (is_object($this->config) && property_exists($this->config, $key)) {
             return $this->config->$key;
         }
-        
+
         return $default;
     }
 }

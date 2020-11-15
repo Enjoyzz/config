@@ -26,43 +26,14 @@
 
 declare(strict_types=1);
 
-namespace Enjoys\Config\Parse;
-
-use \Symfony\Component\Yaml as Symfony;
+namespace Enjoys\Config;
 
 /**
- * Description of YAML
+ * Description of ParseException
  *
  * @author Enjoys
  */
-class YAML extends \Enjoys\Config\Parse
+class ParseException extends \Exception
 {
-
-    /**
-     * 
-     * @param string $yaml
-     * @return mixed
-     */
-    protected function parseString(string $yaml)
-    {
-        try {
-            return Symfony\Yaml::parse($yaml, (int) $this->getOption('flags', 0));
-        } catch (\Symfony\Component\Yaml\Exception\ParseException $e) {
-            throw new \Enjoys\Config\ParseException($e->getMessage());
-        }
-    }
-
-    /**
-     * 
-     * @param string $filename
-     * @return mixed
-     */
-    protected function parseFile(string $filename)
-    {
-        try {
-            return Symfony\Yaml::parseFile($filename, (int) $this->getOption('flags', 0));
-        } catch (\Symfony\Component\Yaml\Exception\ParseException $e) {
-            throw new \Enjoys\Config\ParseException($e->getMessage());
-        }
-    }
+    //put your code here
 }

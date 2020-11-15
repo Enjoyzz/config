@@ -45,7 +45,7 @@ class Json extends \Enjoys\Config\Parse
     {
         return json_decode(
                 $json,
-                (bool) $this->getOption('assoc', true),
+                true,
                 (int) $this->getOption('depth', 512),
                 (int) $this->getOption('options', 0)
         );
