@@ -39,7 +39,6 @@ class Config
     public const YAML = Parse\YAML::class;
     public const INI = Parse\INI::class;
     public const JSON = Parse\Json::class;
-    public const XML = Parse\XML::class;
 
     /**
      *

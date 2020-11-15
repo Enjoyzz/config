@@ -26,22 +26,25 @@
 
 declare(strict_types=1);
 
-namespace Enjoys\Config\Parse;
+namespace Tests\Enjoys\Config;
 
 /**
- * Description of XML
+ * Description of JsonTest
  *
  * @author Enjoys
  */
-class XML extends \Enjoys\Config\Parse
+class JsonTest extends \PHPUnit\Framework\TestCase
 {
-    protected function parseString(string $string)
+    public function test1()
     {
-        ;
+        $config = '{"a": 1, "b": "2"}';
+        $parser = new \Enjoys\Config\Parse\Json($config);
+        $this->assertSame(1, $parser->parse()['a']);
+        $this->assertSame('2', $parser->parse()['b']);
     }
-    
-    protected function parseFile(string $filename)
+    public function test2()
     {
-        ;
+        $parser = new \Enjoys\Config\Parse\Json(__DIR__.'/../fixtures/json/json1.json');
+        $this->assertSame('c', $parser->parse()['a']['b']);
     }
 }
