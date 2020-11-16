@@ -61,7 +61,7 @@ class Config
 
         $parser = new $parseClass($config);
         $parser->setOptions($options);
-        $result  = $parser->parse();
+        $result = $parser->parse();
 
         if (is_array($result)) {
             $this->config = array_merge($this->config, $result);
