@@ -28,31 +28,33 @@ declare(strict_types=1);
 
 namespace Enjoys\Config\Parse;
 
+use Enjoys\Config\Parse;
+
 /**
  * Description of Json
  *
  * @author Enjoys
  */
-class Json extends \Enjoys\Config\Parse
+class Json extends Parse
 {
 
     /**
-     * 
+     *
      * @param string $json
      * @return mixed
      */
     protected function parseString(string $json)
     {
-        return json_decode(
-                $json,
-                true,
-                (int) $this->getOption('depth', 512),
-                (int) $this->getOption('options', 0)
+        return \json_decode(
+            $json,
+            true,
+            (int) $this->getOption('depth', 512),
+            (int) $this->getOption('options', 0)
         );
     }
 
     /**
-     * 
+     *
      * @param string $filename
      * @return mixed
      */

@@ -28,39 +28,41 @@ declare(strict_types=1);
 
 namespace Enjoys\Config\Parse;
 
+use Enjoys\Config\Parse;
+
 /**
  * Description of INI
  *
  * @author Enjoys
  */
-class INI extends \Enjoys\Config\Parse
+class INI extends Parse
 {
 
     /**
-     * 
+     *
      * @param string $ini
      * @return mixed
      */
     protected function parseString(string $ini)
     {
         return parse_ini_string(
-                $ini,
-                (bool) $this->getOption('process_sections', true),
-                (int) $this->getOption('scanner_mode', \INI_SCANNER_TYPED)
+            $ini,
+            (bool) $this->getOption('process_sections', true),
+            (int) $this->getOption('scanner_mode', \INI_SCANNER_TYPED)
         );
     }
 
     /**
-     * 
+     *
      * @param string $filename
      * @return mixed
      */
     protected function parseFile(string $filename)
     {
         return parse_ini_file(
-                $filename,
-                (bool) $this->getOption('process_sections', true),
-                (int) $this->getOption('scanner_mode', \INI_SCANNER_TYPED)
+            $filename,
+            (bool) $this->getOption('process_sections', true),
+            (int) $this->getOption('scanner_mode', \INI_SCANNER_TYPED)
         );
     }
 }

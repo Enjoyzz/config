@@ -28,14 +28,16 @@ declare(strict_types=1);
 
 namespace Enjoys\Config;
 
+use Enjoys\Traits\Options;
+
 /**
  * Description of Parse
  *
  * @author Enjoys
  */
-abstract class Parse implements \Enjoys\Config\ParseInterface
+abstract class Parse implements ParseInterface
 {
-    use \Enjoys\Traits\Options;
+    use Options;
 
     private string $configSource;
     protected ?array $errors = null;

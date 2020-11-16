@@ -28,6 +28,9 @@ declare(strict_types=1);
 
 namespace Enjoys\Config;
 
+use Enjoys\Config\Parse;
+use Exception;
+
 /**
  * Description of Config
  *
@@ -48,26 +51,25 @@ class Config
 
     public function __construct()
     {
-        
     }
 
     public function addConfig(string $config, array $options = [], string $parseClass = self::INI): void
     {
         if (!class_exists($parseClass)) {
-            throw new \Exception(sprintf('Not found parse class: %s', $parseClass));
+            throw new Exception(sprintf('Not found parse class: %s', $parseClass));
         }
 
         $parser = new $parseClass($config);
         $parser->setOptions($options);
         $result  = $parser->parse();
-        
-        if(is_array($result)){
+
+        if (is_array($result)) {
             $this->config = array_merge($this->config, $result);
         }
     }
 
     /**
-     * 
+     *
      * @return mixed
      */
     public function getConfig($key = null, $default = null)

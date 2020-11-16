@@ -39,6 +39,6 @@ interface ParseInterface
      * @return mixed
      */
     public function parse();
-    
+
     public function setOptions(array $options);
 }
