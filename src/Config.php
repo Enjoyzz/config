@@ -69,10 +69,12 @@ class Config
     }
 
     /**
-     *
+     * 
+     * @param string $key
+     * @param mixed $default
      * @return mixed
      */
-    public function getConfig($key = null, $default = null)
+    public function getConfig(string $key = null, $default = null)
     {
         if ($key === null) {
             return $this->config;
