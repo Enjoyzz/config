@@ -31,14 +31,14 @@ namespace Enjoys\Config\Parse;
 use \Symfony\Component\Yaml as Symfony;
 
 /**
- * Description of YAML
- *
+ * @see https://symfony.com/doc/current/components/yaml.htm
  * @author Enjoys
  */
 class YAML extends \Enjoys\Config\Parse
 {
 
     /**
+     * {@inheritDoc}
      * 
      * @param string $yaml
      * @return mixed
@@ -53,6 +53,7 @@ class YAML extends \Enjoys\Config\Parse
     }
 
     /**
+     * {@inheritDoc}
      * 
      * @param string $filename
      * @return mixed

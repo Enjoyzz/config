@@ -55,12 +55,33 @@ class YAMLTest extends \PHPUnit\Framework\TestCase
         $parser = new \Enjoys\Config\Parse\YAML(__DIR__ . '/../fixtures/yaml/yaml2.yml');
         $parser->parse();
     }
-    
+
     public function test4()
     {
         $this->expectException(\Enjoys\Config\ParseException::class);
         $config = "foo: bar\n    baz\nzed";
         $parser = new \Enjoys\Config\Parse\YAML($config);
         $parser->parse();
-    }    
+    }
+
+    public function test5()
+    {
+
+        $yaml = <<<YAML
+event1:
+  name: My Event
+  php_int_size: !php/const PHP_INT_SIZE
+  mydate: 2020-11-16
+  mydatestring: !!str 2020-11-16
+YAML;
+        $parser = new \Enjoys\Config\Parse\YAML($yaml);
+        $parser->setOption('flags', \Symfony\Component\Yaml\Yaml::PARSE_CUSTOM_TAGS | \Symfony\Component\Yaml\Yaml::PARSE_CONSTANT );
+
+
+
+        $result = $parser->parse();
+        $this->assertSame(\PHP_INT_SIZE, $result['event1']['php_int_size']);
+        $this->assertSame(1605484800, $result['event1']['mydate']);
+        $this->assertSame('2020-11-16', $result['event1']['mydatestring']);
+    }
 }
