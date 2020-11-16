@@ -47,21 +47,24 @@ class YAMLTest extends \PHPUnit\Framework\TestCase
     {
         $parser = new \Enjoys\Config\Parse\YAML(__DIR__ . '/../fixtures/yaml/yaml1.yml');
         $this->assertSame('d', $parser->parse()['a']['b']);
+        $this->assertSame(null, $parser->getErrors());
     }
 
     public function test3()
     {
-        $this->expectException(\Enjoys\Config\ParseException::class);
+        //$this->expectException(\Enjoys\Config\ParseException::class);
         $parser = new \Enjoys\Config\Parse\YAML(__DIR__ . '/../fixtures/yaml/yaml2.yml');
-        $parser->parse();
+        $this->assertSame(null, $parser->parse());
+        $this->assertSame(['Unable to parse at line 3 (near "e").'], $parser->getErrors());
     }
 
     public function test4()
     {
-        $this->expectException(\Enjoys\Config\ParseException::class);
+        //$this->expectException(\Enjoys\Config\ParseException::class);
         $config = "foo: bar\n    baz\nzed";
         $parser = new \Enjoys\Config\Parse\YAML($config);
-        $parser->parse();
+        $this->assertSame(null, $parser->parse());
+        $this->assertSame(['Unable to parse at line 3 (near "zed").'], $parser->getErrors());
     }
 
     public function test5()

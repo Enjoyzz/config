@@ -38,6 +38,7 @@ abstract class Parse implements \Enjoys\Config\ParseInterface
     use \Enjoys\Traits\Options;
 
     private string $configSource;
+    protected ?array $errors = null;
 
     public function __construct(string $config)
     {
@@ -51,6 +52,16 @@ abstract class Parse implements \Enjoys\Config\ParseInterface
         }
 
         return $this->parseFile($this->configSource);
+    }
+
+    protected function setError($error): void
+    {
+        $this->errors[] = $error;
+    }
+
+    public function getErrors(): ?array
+    {
+        return $this->errors;
     }
 
     /**
