@@ -42,9 +42,20 @@ class JsonTest extends \PHPUnit\Framework\TestCase
         $this->assertSame(1, $parser->parse()['a']);
         $this->assertSame('2', $parser->parse()['b']);
     }
+  
     public function test2()
     {
         $parser = new \Enjoys\Config\Parse\Json(__DIR__.'/../fixtures/json/json1.json');
         $this->assertSame('c', $parser->parse()['a']['b']);
     }
+    
+  
+    public function test3()
+    {
+        $logger = new \Tests\Enjoys\Config\LoggerSimple();
+        $parser = new \Enjoys\Config\Parse\Json('{');
+        $parser->setLogger($logger);
+        $parser->parse();
+        $this->assertSame(['(4) Syntax error'], $logger->getError('error'));
+    }    
 }

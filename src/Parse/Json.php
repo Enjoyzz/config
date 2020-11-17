@@ -45,12 +45,21 @@ class Json extends Parse
      */
     protected function parseString(string $json)
     {
-        return \json_decode(
-            $json,
-            true,
-            (int) $this->getOption('depth', 512),
-            (int) $this->getOption('options', 0)
+        $result = \json_decode(
+                $json,
+                true,
+                (int) $this->getOption('depth', 512),
+                (int) $this->getOption('options', 0)
         );
+
+        if (json_last_error() === JSON_ERROR_NONE) {
+            return $result;
+        }
+
+        if ($this->logger) {
+            $this->logger->error("(" . json_last_error() . ") " .json_last_error_msg());
+        }
+        return null;
     }
 
     /**
