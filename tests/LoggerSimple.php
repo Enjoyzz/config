@@ -26,38 +26,46 @@
 
 declare(strict_types=1);
 
-namespace Enjoys\Config;
+namespace Tests\Enjoys\Config;
 
 /**
- * Class Logger
+ * Class LoggerSimple
  *
  * @author Enjoys
  */
-class Logger implements \Psr\Log\LoggerInterface
+class LoggerSimple implements \Psr\Log\LoggerInterface
 {
     use \Psr\Log\LoggerTrait;
 
+    protected array $errors = [];
+
     public function log($level, $message, array $context = [])
     {
-        if ($context) {
-            $message = \strtr($message, \iterator_to_array(self::context2replacements($context), true));
-        }
 
-        // В целях отладки приведём XML в читаемый вид, разбив по тегам.
-        if (\strpos($message, '><') !== false) {
-            $message = \str_replace('><', ">\n<", $message);
-        }
-
-        \fwrite(\STDERR, "\n{$message}\n\n");
+        // throw new \Enjoys\Config\ParseException();
+        $this->setError($level, $message);
     }
 
     /**
-     * @param array<string, string> $context
+     * @param string $level
+     * @param string $message
+     * @return void
      */
-    private static function context2replacements($context): \Generator
+    public function setError(string $level, string $message): void
     {
-        foreach ($context as $key => $value) {
-            yield '{' . $key . '}' => $value;
+        $this->errors[$level][] = $message;
+    }
+
+    /**
+     * @param string|null $level
+     * @return array
+     */
+    public function getError(?string $level = null): array
+    {
+        if (array_key_exists($level, $this->errors)) {
+            return $this->errors[$level];
         }
+
+        return $this->errors;
     }
 }

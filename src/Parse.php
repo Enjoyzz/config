@@ -32,13 +32,20 @@ use Enjoys\Traits\Options;
 
 /**
  * Description of Parse
- *
+ * @psalm-suppress PropertyNotSetInConstructor
  * @author Enjoys
  */
-abstract class Parse implements ParseInterface,  \Psr\Log\LoggerAwareInterface
+abstract class Parse implements ParseInterface, \Psr\Log\LoggerAwareInterface
 {
     use Options;
     use \Psr\Log\LoggerAwareTrait;
+
+
+    /**
+     *
+     * @var \Psr\Log\LoggerInterface|null
+     */
+    protected $logger = null;
 
     private string $configSource;
 //    protected ?array $errors = null;
@@ -56,8 +63,8 @@ abstract class Parse implements ParseInterface,  \Psr\Log\LoggerAwareInterface
 
         return $this->parseFile($this->configSource);
     }
-    
-   
+
+
 
 //    protected function setError(string $error): void
 //    {

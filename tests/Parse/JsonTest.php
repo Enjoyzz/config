@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Enjoys\Config;
+namespace Tests\Enjoys\Config\Parse;
 
 /**
  * Description of JsonTest

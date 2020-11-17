@@ -33,7 +33,7 @@ use Exception;
 
 /**
  * Description of Config
- *
+
  * @author Enjoys
  */
 class Config implements \Psr\Log\LoggerAwareInterface
@@ -44,31 +44,41 @@ class Config implements \Psr\Log\LoggerAwareInterface
     public const INI = Parse\INI::class;
     public const JSON = Parse\Json::class;
 
+
+    /**
+     *
+     * @var \Psr\Log\LoggerInterface|null
+     */
+    protected $logger = null;
+
     /**
      *
      * @var mixed
      */
     private $config = [];
 
-    public function __construct()
+    public function __construct(?\Psr\Log\LoggerInterface $logger = null)
     {
-        
+        if ($logger !== null) {
+            $this->setLogger($logger);
+        }
     }
 
     public function addConfig(string $config, array $options = [], string $parseClass = self::INI): void
     {
         if (!class_exists($parseClass)) {
-            throw new Exception(sprintf('Not found parse class: %s', $parseClass));
+            throw new \Exception(sprintf('Not found parse class: %s', $parseClass));
         }
 
         /** @var  ParseInterface $parser */
         $parser = new $parseClass($config);
         $parser->setOptions($options);
-        
+
+
         if ($this->logger) {
             $parser->setLogger($this->logger);
         }
-        
+
         $result = $parser->parse();
 
         if (is_array($result)) {
@@ -77,7 +87,7 @@ class Config implements \Psr\Log\LoggerAwareInterface
     }
 
     /**
-     * 
+     *
      * @param string $key
      * @param mixed $default
      * @return mixed

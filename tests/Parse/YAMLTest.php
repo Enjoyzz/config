@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Enjoys\Config;
+namespace Tests\Enjoys\Config\Parse;
 
 /**
  * Description of YAMLTest
@@ -46,18 +46,20 @@ class YAMLTest extends \PHPUnit\Framework\TestCase
     public function test2()
     {
         $parser = new \Enjoys\Config\Parse\YAML(__DIR__ . '/../fixtures/yaml/yaml1.yml');
-        $parser->setLogger(new \Enjoys\Config\Logger());
+        $logger = new \Tests\Enjoys\Config\LoggerSimple();
+        $parser->setLogger($logger);
         $this->assertSame('d', $parser->parse()['a']['b']);
-       // $this->assertSame(null, $parser->getErrors());
+        $this->assertSame([], $logger->getError());
     }
 
     public function test3()
     {
         //$this->expectException(\Enjoys\Config\ParseException::class);
         $parser = new \Enjoys\Config\Parse\YAML(__DIR__ . '/../fixtures/yaml/yaml2.yml');
-        $parser->setLogger(new \Enjoys\Config\Logger());
+        $logger = new \Tests\Enjoys\Config\LoggerSimple();
+        $parser->setLogger($logger);
         $this->assertSame(null, $parser->parse());
-       // $this->assertSame(['Unable to parse at line 3 (near "e").'], $parser->getErrors());
+        $this->assertSame(['Unable to parse at line 3 (near "e").'], $logger->getError('error'));
     }
 
     public function test4()
@@ -65,9 +67,10 @@ class YAMLTest extends \PHPUnit\Framework\TestCase
         //$this->expectException(\Enjoys\Config\ParseException::class);
         $config = "foo: bar\n    baz\nzed";
         $parser = new \Enjoys\Config\Parse\YAML($config);
-        $parser->setLogger(new \Enjoys\Config\Logger());
+        $logger = new \Tests\Enjoys\Config\LoggerSimple();
+        $parser->setLogger($logger);
         $this->assertSame(null, $parser->parse());
-       // $this->assertSame(['Unable to parse at line 3 (near "zed").'], $parser->getErrors());
+        $this->assertSame(['Unable to parse at line 3 (near "zed").'],$logger->getError('error'));
     }
 
     public function test5()

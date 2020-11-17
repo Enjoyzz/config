@@ -25,27 +25,34 @@
  */
 
 declare(strict_types=1);
+
+namespace Tests\Enjoys\Config;
+
 /**
  * Description of ConfigTest
  *
  * @author Enjoys
  */
-class ConfigTest extends PHPUnit\Framework\TestCase
+class ConfigTest extends \PHPUnit\Framework\TestCase
 {
+
     public function test1()
     {
-        $config = new Enjoys\Config\Config();
+        $config = new \Enjoys\Config\Config();
+        $logger = new LoggerSimple();
+        $config->setLogger($logger);
         $config->addConfig('foo = bar');
+
         $this->assertSame(['foo' => 'bar'], $config->getConfig());
         $this->assertSame('bar', $config->getConfig('foo'));
         $this->assertSame(false, $config->getConfig('baz', false));
+        $this->assertSame([], $logger->getError());
     }
-    
-    
+
     public function test2()
     {
         $this->expectException(\Exception::class);
-        $config = new Enjoys\Config\Config();
+        $config = new \Enjoys\Config\Config(new LoggerSimple());
         $config->addConfig('foo = bar', [], 'InvalidClass');
     }
 }

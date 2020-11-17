@@ -41,4 +41,11 @@ interface ParseInterface
     public function parse();
 
     public function setOptions(array $options): self;
+
+    /**
+     *
+     * @param \Psr\Log\LoggerInterface $logger
+     * @return void
+     */
+    public function setLogger(\Psr\Log\LoggerInterface $logger);
 }
