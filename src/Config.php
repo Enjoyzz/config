@@ -36,8 +36,9 @@ use Exception;
  *
  * @author Enjoys
  */
-class Config
+class Config implements \Psr\Log\LoggerAwareInterface
 {
+    use \Psr\Log\LoggerAwareTrait;
 
     public const YAML = Parse\YAML::class;
     public const INI = Parse\INI::class;
@@ -51,6 +52,7 @@ class Config
 
     public function __construct()
     {
+        
     }
 
     public function addConfig(string $config, array $options = [], string $parseClass = self::INI): void
@@ -59,8 +61,14 @@ class Config
             throw new Exception(sprintf('Not found parse class: %s', $parseClass));
         }
 
+        /** @var  ParseInterface $parser */
         $parser = new $parseClass($config);
         $parser->setOptions($options);
+        
+        if ($this->logger) {
+            $parser->setLogger($this->logger);
+        }
+        
         $result = $parser->parse();
 
         if (is_array($result)) {

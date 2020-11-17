@@ -50,7 +50,7 @@ class YAML extends Parse
             return Symfony\Yaml::parse($yaml, (int) $this->getOption('flags', 0));
         } catch (Symfony\Exception\ParseException $e) {
             //throw new \Enjoys\Config\ParseException($e->getMessage());
-            $this->setError($e->getMessage());
+            $this->logger->error($e->getMessage());
             return null;
         }
     }
@@ -67,7 +67,7 @@ class YAML extends Parse
             return Symfony\Yaml::parseFile($filename, (int) $this->getOption('flags', 0));
         } catch (Symfony\Exception\ParseException $e) {
             //throw new \Enjoys\Config\ParseException($e->getMessage());
-            $this->setError($e->getMessage());
+            $this->logger->error($e->getMessage());
             return null;
         }
     }

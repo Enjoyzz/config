@@ -28,54 +28,36 @@ declare(strict_types=1);
 
 namespace Enjoys\Config;
 
-use Enjoys\Traits\Options;
-
 /**
- * Description of Parse
+ * Class Logger
  *
  * @author Enjoys
  */
-abstract class Parse implements ParseInterface,  \Psr\Log\LoggerAwareInterface
+class Logger implements \Psr\Log\LoggerInterface
 {
-    use Options;
-    use \Psr\Log\LoggerAwareTrait;
+    use \Psr\Log\LoggerTrait;
 
-    private string $configSource;
-//    protected ?array $errors = null;
-
-    public function __construct(string $config)
+    public function log($level, $message, array $context = [])
     {
-        $this->configSource = $config;
-    }
-
-    public function parse()
-    {
-        if (!is_file($this->configSource)) {
-            return $this->parseString($this->configSource);
+        if ($context) {
+            $message = \strtr($message, \iterator_to_array(self::context2replacements($context), true));
         }
 
-        return $this->parseFile($this->configSource);
+        // В целях отладки приведём XML в читаемый вид, разбив по тегам.
+        if (\strpos($message, '><') !== false) {
+            $message = \str_replace('><', ">\n<", $message);
+        }
+
+        \fwrite(\STDERR, "\n{$message}\n\n");
     }
-    
-   
-
-//    protected function setError(string $error): void
-//    {
-//        $this->errors[] = $error;
-//    }
-
-//    public function getErrors(): ?array
-//    {
-//        return $this->errors;
-//    }
 
     /**
-     * @return mixed
+     * @param array<string, string> $context
      */
-    abstract protected function parseString(string $string);
-
-    /**
-     * @return mixed
-     */
-    abstract protected function parseFile(string $filename);
+    private static function context2replacements($context): \Generator
+    {
+        foreach ($context as $key => $value) {
+            yield '{' . $key . '}' => $value;
+        }
+    }
 }
