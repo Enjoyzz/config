@@ -44,7 +44,6 @@ class Config implements \Psr\Log\LoggerAwareInterface
     public const INI = Parse\INI::class;
     public const JSON = Parse\Json::class;
 
-
     /**
      *
      * @var \Psr\Log\LoggerInterface|null
@@ -64,11 +63,19 @@ class Config implements \Psr\Log\LoggerAwareInterface
         }
     }
 
-    public function addConfig(string $config, array $options = [], string $parseClass = self::INI): void
+    public function addConfig($config, array $options = [], string $parseClass = self::INI): void
     {
+        $namespace = null;
+
         if (!class_exists($parseClass)) {
             throw new \Exception(sprintf('Not found parse class: %s', $parseClass));
         }
+
+        if (is_array($config)) {
+            $namespace = array_key_first($config);
+            $config = $config[$namespace];
+        }
+
 
         /** @var  ParseInterface $parser */
         $parser = new $parseClass($config);
@@ -81,8 +88,16 @@ class Config implements \Psr\Log\LoggerAwareInterface
 
         $result = $parser->parse();
 
+
         if (is_array($result)) {
-            $this->config = array_merge($this->config, $result);
+            if ($namespace === null) {
+                $this->config = array_merge($this->config, $result);
+            } else {
+                if (!array_key_exists($namespace, $this->config)) {
+                    $this->config[$namespace] = [];
+                }
+                $this->config[$namespace] = array_merge($this->config[$namespace], $result);
+            }
         }
     }
 
