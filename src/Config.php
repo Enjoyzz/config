@@ -63,6 +63,14 @@ class Config implements \Psr\Log\LoggerAwareInterface
         }
     }
 
+    /**
+     * 
+     * @param array|string $config
+     * @param array $options
+     * @param string $parseClass
+     * @return void
+     * @throws Exception
+     */
     public function addConfig($config, array $options = [], string $parseClass = self::INI): void
     {
         $namespace = null;
