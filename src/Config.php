@@ -44,11 +44,6 @@ class Config implements \Psr\Log\LoggerAwareInterface
     public const INI = Parse\INI::class;
     public const JSON = Parse\Json::class;
 
-    /**
-     *
-     * @var \Psr\Log\LoggerInterface|null
-     */
-    protected $logger = null;
 
     /**
      *
@@ -58,13 +53,11 @@ class Config implements \Psr\Log\LoggerAwareInterface
 
     public function __construct(?\Psr\Log\LoggerInterface $logger = null)
     {
-        if ($logger !== null) {
-            $this->setLogger($logger);
-        }
+        $this->logger = $logger ?? new \Psr\Log\NullLogger();
     }
 
     /**
-     * 
+     *
      * @param array|string $config
      * @param array $options
      * @param string $parseClass
@@ -73,32 +66,23 @@ class Config implements \Psr\Log\LoggerAwareInterface
      */
     public function addConfig($config, array $options = [], string $parseClass = self::INI): void
     {
-        $namespace = null;
-
         if (!class_exists($parseClass)) {
             throw new \Exception(sprintf('Not found parse class: %s', $parseClass));
         }
 
-        if (is_array($config)) {
+        if (is_array($config) && !empty($config)) {
             $namespace = array_key_first($config);
             $config = $config[$namespace];
         }
 
-
         /** @var  ParseInterface $parser */
         $parser = new $parseClass($config);
         $parser->setOptions($options);
-
-
-        if ($this->logger) {
-            $parser->setLogger($this->logger);
-        }
-
+        $parser->setLogger($this->logger);
         $result = $parser->parse();
 
-
         if (is_array($result)) {
-            if ($namespace === null) {
+            if (!isset($namespace)) {
                 $this->config = array_merge($this->config, $result);
             } else {
                 if (!array_key_exists($namespace, $this->config)) {

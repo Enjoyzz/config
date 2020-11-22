@@ -41,18 +41,15 @@ abstract class Parse implements ParseInterface, \Psr\Log\LoggerAwareInterface
     use \Psr\Log\LoggerAwareTrait;
 
 
-    /**
-     *
-     * @var \Psr\Log\LoggerInterface|null
-     */
-    protected $logger = null;
+
 
     private string $configSource;
 //    protected ?array $errors = null;
 
     public function __construct(string $config)
     {
-        $this->configSource = $config;
+         $this->configSource = $config;
+         $this->logger = new \Psr\Log\NullLogger();
     }
 
     public function parse()
