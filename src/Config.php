@@ -70,19 +70,29 @@ class Config implements \Psr\Log\LoggerAwareInterface
             throw new \Exception(sprintf('Not found parse class: %s', $parseClass));
         }
 
-        if (is_array($config) && !empty($config)) {
-            $namespace = array_key_first($config);
-            $config = $config[$namespace];
+        if (is_array($config)) {
+            foreach ($config as $namespace => $_config) {
+                $this->parse($parseClass, $_config, $options, $namespace);
+            }
+        }
+        
+        if(is_string($config)){
+            $this->parse($parseClass, $config, $options);
         }
 
-        /** @var  ParseInterface $parser */
+ 
+    }
+    
+    private function parse(string $parseClass, string $config, $options, ?string $namespace = null)
+    {
+       /** @var  ParseInterface $parser */
         $parser = new $parseClass($config);
         $parser->setOptions($options);
         $parser->setLogger($this->logger);
         $result = $parser->parse();
 
         if (is_array($result)) {
-            if (!isset($namespace)) {
+            if ($namespace === null) {
                 $this->config = array_merge($this->config, $result);
             } else {
                 if (!array_key_exists($namespace, $this->config)) {

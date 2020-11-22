@@ -69,4 +69,13 @@ class ConfigTest extends \PHPUnit\Framework\TestCase
         $config->addConfig(['test2'=>'foo = baz']);
         $this->assertSame(['test'=>['foo' => 'baz', 'foo2' => 'bar'], 'test2' =>['foo' => 'baz']], $config->getConfig());
     }
+    public function test4()
+    {
+        $config = new \Enjoys\Config\Config(new LoggerSimple());
+        $config->addConfig([
+            'test'=>'foo = bar',
+            'test2'=>'foo = bar',
+        ]);
+        $this->assertSame(['test'=>['foo' => 'bar'], 'test2' =>['foo' => 'bar']], $config->getConfig());
+    }
 }
