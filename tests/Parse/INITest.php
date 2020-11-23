@@ -62,12 +62,14 @@ urls[git] = "http://git.php.net"
                 
 INI;
 
-        $parser = new \Enjoys\Config\Parse\INI($config);
+        $parser = new \Enjoys\Config\Parse\INI();
+        $parser->addConfigSource($config);
         $this->assertSame(['one' => 1,'five' => 5,'animal' => 'BIRD'], $parser->parse()['first_section']);
     }
     
      public function test_2(){
-         $parser = new \Enjoys\Config\Parse\INI(__DIR__.'/../fixtures/ini/file1.ini');
+         $parser = new \Enjoys\Config\Parse\INI();
+         $parser->addConfigSource(__DIR__.'/../fixtures/ini/file1.ini');
          $this->assertSame('3', $parser->parse()['three']);
          $this->assertSame('4', $parser->parse()['four']);
          $this->assertSame('5', $parser->parse()['five']);
@@ -79,10 +81,11 @@ INI;
          //$this->assertSame('5', $parser->parse()['also_five']);
      }
      public function test_3(){
-         $parser = new \Enjoys\Config\Parse\INI(__DIR__.'/../fixtures/ini/file2.ini');
+         $parser = new \Enjoys\Config\Parse\INI();
          $parser->setOptions([
              'process_sections' => false
          ]);
+         $parser->addConfigSource(__DIR__.'/../fixtures/ini/file2.ini');
          $this->assertSame('value', $parser->parse()['key']);
          $this->assertSame(true, $parser->parse()['key2']);
          

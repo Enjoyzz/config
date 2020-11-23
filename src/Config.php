@@ -44,7 +44,6 @@ class Config implements \Psr\Log\LoggerAwareInterface
     public const INI = Parse\INI::class;
     public const JSON = Parse\Json::class;
 
-
     /**
      *
      * @var mixed
@@ -58,37 +57,47 @@ class Config implements \Psr\Log\LoggerAwareInterface
 
     /**
      *
-     * @param array|string $config
+     * @param array|string $params
      * @param array $options
      * @param string $parseClass
      * @return void
      * @throws Exception
      */
-    public function addConfig($config, array $options = [], string $parseClass = self::INI): void
+    public function addConfig($params, array $options = [], string $parseClass = self::INI): void
     {
+        $params = (array) $params;
+
         if (!class_exists($parseClass)) {
             throw new \Exception(sprintf('Not found parse class: %s', $parseClass));
         }
-
-        if (is_array($config)) {
-            foreach ($config as $namespace => $_config) {
-                $this->parse($parseClass, $_config, $options, $namespace);
-            }
-        }
-        
-        if(is_string($config)){
-            $this->parse($parseClass, $config, $options);
-        }
-
- 
-    }
-    
-    private function parse(string $parseClass, string $config, $options, ?string $namespace = null)
-    {
-       /** @var  ParseInterface $parser */
-        $parser = new $parseClass($config);
+        /** @var  ParseInterface $parser */
+        $parser = new $parseClass();
         $parser->setOptions($options);
         $parser->setLogger($this->logger);
+
+        foreach ($params as $namespace => $config) {
+            if (is_int($namespace)) {
+                $namespace = null;
+            }
+
+            if (is_string($namespace)) {
+                $namespace = \trim($namespace);
+            }
+
+            if (is_array($config)) {
+                foreach ($config as $_config) {
+                    $this->parse($parser, $_config, $namespace);
+                }
+                continue;
+            }
+            $this->parse($parser, $config, $namespace);
+        }
+    }
+
+    private function parse(ParseInterface $parser, string $config, ?string $namespace = null): void
+    {
+        $parser->addConfigSource($config);
+
         $result = $parser->parse();
 
         if (is_array($result)) {

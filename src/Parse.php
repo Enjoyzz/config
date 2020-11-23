@@ -43,17 +43,27 @@ abstract class Parse implements ParseInterface, \Psr\Log\LoggerAwareInterface
 
 
 
-    private string $configSource;
+    private ?string $configSource = null;
 //    protected ?array $errors = null;
 
-    public function __construct(string $config)
+    public function __construct()
     {
-         $this->configSource = $config;
+
          $this->logger = new \Psr\Log\NullLogger();
+    }
+
+    public function addConfigSource(string $source): void
+    {
+        $this->configSource = $source;
     }
 
     public function parse()
     {
+        if (is_null($this->configSource)) {
+            $this->logger->error('Добавьте данные для парсинга');
+            return;
+        }
+
         if (!is_file($this->configSource)) {
             return $this->parseString($this->configSource);
         }

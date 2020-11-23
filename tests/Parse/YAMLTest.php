@@ -39,13 +39,15 @@ class YAMLTest extends \PHPUnit\Framework\TestCase
     public function test1()
     {
         $config = 'foo: bar';
-        $parser = new \Enjoys\Config\Parse\YAML($config);
+        $parser = new \Enjoys\Config\Parse\YAML();
+        $parser->addConfigSource($config);
         $this->assertSame('bar', $parser->parse()['foo']);
     }
 
     public function test2()
     {
-        $parser = new \Enjoys\Config\Parse\YAML(__DIR__ . '/../fixtures/yaml/yaml1.yml');
+        $parser = new \Enjoys\Config\Parse\YAML();
+        $parser->addConfigSource(__DIR__ . '/../fixtures/yaml/yaml1.yml');
         $logger = new \Tests\Enjoys\Config\LoggerSimple();
         $parser->setLogger($logger);
         $this->assertSame('d', $parser->parse()['a']['b']);
@@ -55,7 +57,8 @@ class YAMLTest extends \PHPUnit\Framework\TestCase
     public function test3()
     {
         //$this->expectException(\Enjoys\Config\ParseException::class);
-        $parser = new \Enjoys\Config\Parse\YAML(__DIR__ . '/../fixtures/yaml/yaml2.yml');
+        $parser = new \Enjoys\Config\Parse\YAML();
+        $parser->addConfigSource(__DIR__ . '/../fixtures/yaml/yaml2.yml');
         $logger = new \Tests\Enjoys\Config\LoggerSimple();
         $parser->setLogger($logger);
         $this->assertSame(null, $parser->parse());
@@ -66,11 +69,12 @@ class YAMLTest extends \PHPUnit\Framework\TestCase
     {
         //$this->expectException(\Enjoys\Config\ParseException::class);
         $config = "foo: bar\n    baz\nzed";
-        $parser = new \Enjoys\Config\Parse\YAML($config);
+        $parser = new \Enjoys\Config\Parse\YAML();
+        $parser->addConfigSource($config);
         $logger = new \Tests\Enjoys\Config\LoggerSimple();
         $parser->setLogger($logger);
         $this->assertSame(null, $parser->parse());
-        $this->assertSame(['Unable to parse at line 3 (near "zed").'],$logger->getError('error'));
+        $this->assertSame(['Unable to parse at line 3 (near "zed").'], $logger->getError('error'));
     }
 
     public function test5()
@@ -83,9 +87,10 @@ event1:
   mydate: 2020-11-16
   mydatestring: !!str 2020-11-16
 YAML;
-        $parser = new \Enjoys\Config\Parse\YAML($yaml);
-        $parser->setOption('flags', \Symfony\Component\Yaml\Yaml::PARSE_CUSTOM_TAGS | \Symfony\Component\Yaml\Yaml::PARSE_CONSTANT );
+        $parser = new \Enjoys\Config\Parse\YAML();
 
+        $parser->setOption('flags', \Symfony\Component\Yaml\Yaml::PARSE_CUSTOM_TAGS | \Symfony\Component\Yaml\Yaml::PARSE_CONSTANT);
+        $parser->addConfigSource($yaml);
 
 
         $result = $parser->parse();

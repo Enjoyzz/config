@@ -33,7 +33,12 @@ namespace Enjoys\Config;
 interface ParseInterface
 {
 
-    public function __construct(string $config);
+    /**
+     *
+     * @param string $source
+     * @return void
+     */
+    public function addConfigSource(string $source): void;
 
     /**
      * @return mixed

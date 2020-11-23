@@ -38,14 +38,16 @@ class JsonTest extends \PHPUnit\Framework\TestCase
     public function test1()
     {
         $config = '{"a": 1, "b": "2"}';
-        $parser = new \Enjoys\Config\Parse\Json($config);
+        $parser = new \Enjoys\Config\Parse\Json();
+        $parser->addConfigSource($config);
         $this->assertSame(1, $parser->parse()['a']);
         $this->assertSame('2', $parser->parse()['b']);
     }
   
     public function test2()
     {
-        $parser = new \Enjoys\Config\Parse\Json(__DIR__.'/../fixtures/json/json1.json');
+        $parser = new \Enjoys\Config\Parse\Json();
+        $parser->addConfigSource(__DIR__.'/../fixtures/json/json1.json');
         $this->assertSame('c', $parser->parse()['a']['b']);
     }
     
@@ -53,7 +55,8 @@ class JsonTest extends \PHPUnit\Framework\TestCase
     public function test3()
     {
         $logger = new \Tests\Enjoys\Config\LoggerSimple();
-        $parser = new \Enjoys\Config\Parse\Json('{');
+        $parser = new \Enjoys\Config\Parse\Json();
+        $parser->addConfigSource('{');
         $parser->setLogger($logger);
         $parser->parse();
         $this->assertSame(['(4) Syntax error'], $logger->getError('error'));
