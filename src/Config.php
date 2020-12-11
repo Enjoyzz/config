@@ -28,17 +28,19 @@ declare(strict_types=1);
 
 namespace Enjoys\Config;
 
-use Enjoys\Config\Parse;
-use Exception;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
+
 
 /**
  * Description of Config
-
  * @author Enjoys
  */
-class Config implements \Psr\Log\LoggerAwareInterface
+class Config implements LoggerAwareInterface
 {
-    use \Psr\Log\LoggerAwareTrait;
+    use LoggerAwareTrait;
 
     public const YAML = Parse\YAML::class;
     public const INI = Parse\INI::class;
@@ -50,9 +52,9 @@ class Config implements \Psr\Log\LoggerAwareInterface
      */
     private $config = [];
 
-    public function __construct(?\Psr\Log\LoggerInterface $logger = null)
+    public function __construct(?LoggerInterface $logger = null)
     {
-        $this->logger = $logger ?? new \Psr\Log\NullLogger();
+        $this->logger = $logger ?? new NullLogger();
     }
 
     /**
@@ -61,11 +63,11 @@ class Config implements \Psr\Log\LoggerAwareInterface
      * @param array $options
      * @param string $parseClass
      * @return void
-     * @throws Exception
+     * @throws \Exception
      */
     public function addConfig($params, array $options = [], string $parseClass = self::INI): void
     {
-        $params = (array) $params;
+        $params = (array)$params;
 
         if (!class_exists($parseClass)) {
             throw new \Exception(sprintf('Not found parse class: %s', $parseClass));

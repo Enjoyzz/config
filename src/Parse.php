@@ -29,16 +29,19 @@ declare(strict_types=1);
 namespace Enjoys\Config;
 
 use Enjoys\Traits\Options;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
+use Psr\Log\NullLogger;
 
 /**
  * Description of Parse
  * @psalm-suppress PropertyNotSetInConstructor
  * @author Enjoys
  */
-abstract class Parse implements ParseInterface, \Psr\Log\LoggerAwareInterface
+abstract class Parse implements ParseInterface, LoggerAwareInterface
 {
     use Options;
-    use \Psr\Log\LoggerAwareTrait;
+    use LoggerAwareTrait;
 
 
 
@@ -49,7 +52,7 @@ abstract class Parse implements ParseInterface, \Psr\Log\LoggerAwareInterface
     public function __construct()
     {
 
-         $this->logger = new \Psr\Log\NullLogger();
+         $this->logger = new NullLogger();
     }
 
     public function addConfigSource(string $source): void
@@ -61,7 +64,7 @@ abstract class Parse implements ParseInterface, \Psr\Log\LoggerAwareInterface
     {
         if (is_null($this->configSource)) {
             $this->logger->error('Добавьте данные для парсинга');
-            return;
+            return null;
         }
 
         if (!is_file($this->configSource)) {
@@ -84,11 +87,13 @@ abstract class Parse implements ParseInterface, \Psr\Log\LoggerAwareInterface
 //    }
 
     /**
+     * @param string $string
      * @return mixed
      */
     abstract protected function parseString(string $string);
 
     /**
+     * @param string $filename
      * @return mixed
      */
     abstract protected function parseFile(string $filename);

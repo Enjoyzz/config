@@ -26,9 +26,12 @@
 
 namespace Enjoys\Config;
 
+use Psr\Log\LoggerInterface;
+
 /**
  *
  * @author Enjoys
+ * @method setOptions(array $options)
  */
 interface ParseInterface
 {
@@ -49,8 +52,8 @@ interface ParseInterface
 
     /**
      *
-     * @param \Psr\Log\LoggerInterface $logger
+     * @param LoggerInterface $logger
      * @return void
      */
-    public function setLogger(\Psr\Log\LoggerInterface $logger);
+    public function setLogger(LoggerInterface $logger);
 }
