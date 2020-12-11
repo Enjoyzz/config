@@ -45,7 +45,7 @@ interface ParseInterface
      */
     public function parse();
 
-    public function setOptions(array $options): self;
+//    public function setOptions(array $options): self;
 
     /**
      *
