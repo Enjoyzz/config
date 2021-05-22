@@ -1,44 +1,24 @@
 <?php
 
-/*
- * The MIT License
- *
- * Copyright 2020 Enjoys.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- */
-
 declare(strict_types=1);
 
 namespace Tests\Enjoys\Config;
+
+use Enjoys\Config\Config;
+use Exception;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Description of ConfigTest
  *
  * @author Enjoys
  */
-class ConfigTest extends \PHPUnit\Framework\TestCase
+class ConfigTest extends TestCase
 {
 
     public function test1()
     {
-        $config = new \Enjoys\Config\Config();
+        $config = new Config();
         $logger = new LoggerSimple();
         $config->setLogger($logger);
         $config->addConfig('foo = bar');
@@ -51,14 +31,14 @@ class ConfigTest extends \PHPUnit\Framework\TestCase
 
     public function test2()
     {
-        $this->expectException(\Exception::class);
-        $config = new \Enjoys\Config\Config(new LoggerSimple());
+        $this->expectException(Exception::class);
+        $config = new Config(new LoggerSimple());
         $config->addConfig('foo = bar', [], 'InvalidClass');
     }
 
     public function test3()
     {
-        $config = new \Enjoys\Config\Config(new LoggerSimple());
+        $config = new Config(new LoggerSimple());
         $config->addConfig(['test' => 'foo = bar']);
         $this->assertSame(['test' => ['foo' => 'bar']], $config->getConfig());
         $config->addConfig(['test' => 'foo2 = bar']);
@@ -71,7 +51,7 @@ class ConfigTest extends \PHPUnit\Framework\TestCase
 
     public function test4()
     {
-        $config = new \Enjoys\Config\Config(new LoggerSimple());
+        $config = new Config(new LoggerSimple());
         $config->addConfig([
             'test' => 'foo = bar',
             'test2' => 'foo = bar',
@@ -81,7 +61,7 @@ class ConfigTest extends \PHPUnit\Framework\TestCase
 
     public function test5()
     {
-        $config = new \Enjoys\Config\Config(new LoggerSimple());
+        $config = new Config(new LoggerSimple());
         $config->addConfig([
             'test' => [
                 'foo = bar',
@@ -92,7 +72,7 @@ class ConfigTest extends \PHPUnit\Framework\TestCase
     }
     public function test6()
     {
-        $config = new \Enjoys\Config\Config(new LoggerSimple());
+        $config = new Config(new LoggerSimple());
         $config->addConfig([
             'test' => [
                 'foo = bar',
@@ -100,5 +80,22 @@ class ConfigTest extends \PHPUnit\Framework\TestCase
             ]
         ]);
         $this->assertSame(['test' => ['foo' => 'bar', 'baz' => 'bar']], $config->getConfig());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testReplace()
+    {
+        $config = new Config(new LoggerSimple());
+        $config->addConfig(['test' => 'foo = bar']);
+        $config->addConfig(['test' => 'foo = baz']);
+        $this->assertSame(['test' => ['foo' => 'baz']], $config->getConfig());
+
+        $config = new Config(new LoggerSimple());
+        $config->addConfig(['test' => 'foo = bar']);
+        $config->addConfig(['test' => 'foo = baz'], [], $config::INI, false);
+        $this->assertSame(['test' => ['foo' => 'bar']], $config->getConfig());
+
     }
 }
