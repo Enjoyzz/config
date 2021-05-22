@@ -14,19 +14,17 @@ use Psr\Log\NullLogger;
  * Description of Config
  * @author Enjoys
  */
-class Config implements LoggerAwareInterface
+final class Config
 {
-    use LoggerAwareTrait;
 
     public const YAML = Parse\YAML::class;
     public const INI = Parse\INI::class;
     public const JSON = Parse\Json::class;
 
-    /**
-     *
-     * @var mixed
-     */
-    private $config = [];
+
+    private array $config = [];
+
+    private LoggerInterface $logger;
 
     public function __construct(?LoggerInterface $logger = null)
     {
@@ -38,6 +36,7 @@ class Config implements LoggerAwareInterface
      * @param array|string $params
      * @param array $options
      * @param string $parseClass
+     * @param bool $replace
      * @return void
      * @throws \Exception
      */
@@ -85,9 +84,9 @@ class Config implements LoggerAwareInterface
         if (is_array($result)) {
             if ($namespace === null) {
                 if ($replace === true) {
-                    $this->config = array_merge((array)$this->config, $result);
+                    $this->config = array_merge($this->config, $result);
                 } else {
-                    $this->config = array_merge($result, (array)$this->config);
+                    $this->config = array_merge($result, $this->config);
                 }
             } else {
                 if (!array_key_exists($namespace, $this->config)) {
@@ -114,14 +113,15 @@ class Config implements LoggerAwareInterface
             return $this->config;
         }
 
-        if (is_array($this->config) && array_key_exists($key, $this->config)) {
+        if (array_key_exists($key, $this->config)) {
             return $this->config[$key];
         }
 
-//        if (is_object($this->config) && property_exists($this->config, $key)) {
-//            return $this->config->$key;
-//        }
-
         return $default;
+    }
+
+    public function setLogger(LoggerInterface $logger): void
+    {
+        $this->logger = $logger;
     }
 }

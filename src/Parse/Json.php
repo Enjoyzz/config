@@ -48,16 +48,18 @@ class Json extends Parse
         $result = \json_decode(
             $json,
             true,
-            (int) $this->getOption('depth', 512),
-            (int) $this->getOption('options', 0)
+            (int)$this->getOption('depth', 512),
+            (int)$this->getOption('options', 0)
         );
+        
+        //Clear the most recent error
+        \error_clear_last();        
 
-        if (json_last_error() === JSON_ERROR_NONE) {
+        if (\json_last_error() === JSON_ERROR_NONE) {
             return $result;
         }
 
-
-        $this->logger->error("(" . json_last_error() . ") " . json_last_error_msg());
+        $this->logger->error(sprintf('(%s) %s', \json_last_error(), \json_last_error_msg()));
 
         return null;
     }

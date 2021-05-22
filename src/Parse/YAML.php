@@ -47,9 +47,8 @@ class YAML extends Parse
     protected function parseString(string $yaml)
     {
         try {
-            return Symfony\Yaml::parse($yaml, (int) $this->getOption('flags', 0));
+            return Symfony\Yaml::parse($yaml, (int)$this->getOption('flags', 0));
         } catch (Symfony\Exception\ParseException $e) {
-            //throw new \Enjoys\Config\ParseException($e->getMessage());
             $this->logger->error($e->getMessage());
             return null;
         }
@@ -64,9 +63,8 @@ class YAML extends Parse
     protected function parseFile(string $filename)
     {
         try {
-            return Symfony\Yaml::parseFile($filename, (int) $this->getOption('flags', 0));
+            return Symfony\Yaml::parseFile($filename, (int)$this->getOption('flags', 0));
         } catch (Symfony\Exception\ParseException $e) {
-            //throw new \Enjoys\Config\ParseException($e->getMessage());
             $this->logger->error($e->getMessage());
             return null;
         }
