@@ -49,23 +49,11 @@ abstract class Parse implements ParseInterface
         return $this->parseFile($this->configSource);
     }
 
-
-
-//    protected function setError(string $error): void
-//    {
-//        $this->errors[] = $error;
-//    }
-
-//    public function getErrors(): ?array
-//    {
-//        return $this->errors;
-//    }
-
     /**
-     * @param string $string
+     * @param string $input
      * @return mixed
      */
-    abstract protected function parseString(string $string);
+    abstract protected function parseString(string $input);
 
     /**
      * @param string $filename

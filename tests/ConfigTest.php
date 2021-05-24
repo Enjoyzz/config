@@ -9,9 +9,8 @@ use Exception;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Description of ConfigTest
- *
- * @author Enjoys
+ * Class ConfigTest
+ * @package Tests\Enjoys\Config
  */
 class ConfigTest extends TestCase
 {
@@ -46,39 +45,49 @@ class ConfigTest extends TestCase
         $config->addConfig(['test' => 'foo = baz']);
         $this->assertSame(['test' => ['foo' => 'baz', 'foo2' => 'bar']], $config->getConfig());
         $config->addConfig(['test2' => 'foo = baz']);
-        $this->assertSame(['test' => ['foo' => 'baz', 'foo2' => 'bar'], 'test2' => ['foo' => 'baz']], $config->getConfig());
+        $this->assertSame(
+            ['test' => ['foo' => 'baz', 'foo2' => 'bar'], 'test2' => ['foo' => 'baz']],
+            $config->getConfig()
+        );
     }
 
     public function test4()
     {
         $config = new Config(new LoggerSimple());
-        $config->addConfig([
-            'test' => 'foo = bar',
-            'test2' => 'foo = bar',
-        ]);
+        $config->addConfig(
+            [
+                'test' => 'foo = bar',
+                'test2' => 'foo = bar',
+            ]
+        );
         $this->assertSame(['test' => ['foo' => 'bar'], 'test2' => ['foo' => 'bar']], $config->getConfig());
     }
 
     public function test5()
     {
         $config = new Config(new LoggerSimple());
-        $config->addConfig([
-            'test' => [
-                'foo = bar',
-                'foo = bar2'
+        $config->addConfig(
+            [
+                'test' => [
+                    'foo = bar',
+                    'foo = bar2'
+                ]
             ]
-        ]);
+        );
         $this->assertSame(['test' => ['foo' => 'bar2']], $config->getConfig());
     }
+
     public function test6()
     {
         $config = new Config(new LoggerSimple());
-        $config->addConfig([
-            'test' => [
-                'foo = bar',
-                'baz = bar'
+        $config->addConfig(
+            [
+                'test' => [
+                    'foo = bar',
+                    'baz = bar'
+                ]
             ]
-        ]);
+        );
         $this->assertSame(['test' => ['foo' => 'bar', 'baz' => 'bar']], $config->getConfig());
     }
 
@@ -96,6 +105,24 @@ class ConfigTest extends TestCase
         $config->addConfig(['test' => 'foo = bar']);
         $config->addConfig(['test' => 'foo = baz'], [], $config::INI, false);
         $this->assertSame(['test' => ['foo' => 'bar']], $config->getConfig());
+    }
 
+    public function testReplaceRecursive()
+    {
+        $config = new Config(new LoggerSimple());
+        $test1 = <<<YAML
+bar:
+    foo:
+        val: 1
+        val2: 2
+YAML;
+        $test2 = <<<YAML
+bar:
+    foo:
+        val: 3
+YAML;
+        $config->addConfig(['test' => $test1], [], $config::YAML);
+        $config->addConfig(['test' => $test2], [], $config::YAML);
+        $this->assertSame(['test' => ['bar' => ['foo' => ['val' => 3, 'val2' => 2]]]], $config->getConfig());
     }
 }

@@ -84,21 +84,47 @@ final class Config
         if (is_array($result)) {
             if ($namespace === null) {
                 if ($replace === true) {
-                    $this->config = array_merge($this->config, $result);
+                    $this->config = $this->array_merge_recursive_distinct($this->config, $result);
                 } else {
-                    $this->config = array_merge($result, $this->config);
+                    $this->config = $this->array_merge_recursive_distinct($result, $this->config);
                 }
             } else {
                 if (!array_key_exists($namespace, $this->config)) {
                     $this->config[$namespace] = [];
                 }
                 if ($replace === true) {
-                    $this->config[$namespace] = array_merge((array)$this->config[$namespace], $result);
+                    $this->config[$namespace] = $this->array_merge_recursive_distinct((array)$this->config[$namespace], $result);
                 } else {
-                    $this->config[$namespace] = array_merge($result, (array)$this->config[$namespace]);
+                    $this->config[$namespace] = $this->array_merge_recursive_distinct($result, (array)$this->config[$namespace]);
                 }
             }
         }
+    }
+
+    private function array_merge_recursive_distinct(array $array_o, array $array_i): array
+    {
+        foreach ($array_i as $k => $v) {
+            if (!isset($array_o[$k])) {
+                $array_o[$k] = $v;
+            } else {
+                if (is_array($array_o[$k])) {
+                    if (is_array($v)) {
+                        $array_o[$k] = $this->array_merge_recursive_distinct($array_o[$k], $v);
+                    } else {
+                        $array_o[$k] = $v;
+                    }
+                } else {
+                    if (!isset($array_o[$k])) {
+                        $array_o[$k] = $v;
+                    } else {
+                        $array_o[$k] = array($array_o[$k]);
+                        $array_o[$k] = $v;
+                    }
+                }
+            }
+        }
+
+        return $array_o;
     }
 
     /**
