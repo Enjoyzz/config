@@ -109,7 +109,7 @@ class ConfigTest extends TestCase
 
     public function testReplaceRecursive()
     {
-        $config = new Config(new LoggerSimple());
+
         $test1 = <<<YAML
 bar:
     foo:
@@ -121,8 +121,14 @@ bar:
     foo:
         val: 3
 YAML;
+        $config = new Config(new LoggerSimple());
         $config->addConfig(['test' => $test1], [], $config::YAML);
         $config->addConfig(['test' => $test2], [], $config::YAML);
         $this->assertSame(['test' => ['bar' => ['foo' => ['val' => 3, 'val2' => 2]]]], $config->getConfig());
+
+        $config = new Config(new LoggerSimple());
+        $config->addConfig(['test' => $test1], [], $config::YAML);
+        $config->addConfig(['test' => $test2], [], $config::YAML, false);
+        $this->assertSame(['test' => ['bar' => ['foo' => ['val' => 1, 'val2' => 2]]]], $config->getConfig());
     }
 }
