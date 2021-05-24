@@ -13,7 +13,8 @@
     "enjoys/traits": "^1.0",
     "symfony/yaml": "^5.1.0",
     "psr/log": "^1.0",
-    "ext-json": "*"
+    "ext-json": "*",
+    "enjoys/functions": "^2.3"
   },
   "require-dev": {
     "phpunit/phpunit": "^9.4",
