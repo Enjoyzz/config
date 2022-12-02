@@ -131,4 +131,29 @@ YAML;
         $config->addConfig(['test' => $test2], [], $config::YAML, false);
         $this->assertSame(['test' => ['bar' => ['foo' => ['val' => 1, 'val2' => 2]]]], $config->getConfig());
     }
+
+    public function testGetNestedValues()
+    {
+        $config = new Config(new LoggerSimple());
+        $config->addConfig(['test' => 'foo = bar']);
+        $config->addConfig(['test' => 'foo = baz']);
+        $this->assertSame('baz', $config->get('test->foo'));
+    }
+
+    public function testGetNestedValuesWithCustomSeparator()
+    {
+        $config = new Config(new LoggerSimple());
+        $config->addConfig(['test' => 'foo = bar']);
+        $config->addConfig(['test' => 'foo = baz']);
+        $config->setSeparator('@');
+        $this->assertSame('baz', $config->get('test@foo'));
+    }
+
+    public function testGetNestedValuesWithReturnDefault()
+    {
+        $config = new Config(new LoggerSimple());
+        $config->addConfig(['test' => 'foo = bar']);
+        $config->addConfig(['test' => 'foo = baz']);
+        $this->assertSame(false, $config->get('test->foo->bar', false));
+    }
 }
