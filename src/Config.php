@@ -4,16 +4,10 @@ declare(strict_types=1);
 
 namespace Enjoys\Config;
 
-use Psr\Log\LoggerAwareInterface;
-use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
 
-/**
- * Description of Config
- * @author Enjoys
- */
 final class Config
 {
 
@@ -23,6 +17,8 @@ final class Config
 
 
     private array $config = [];
+
+    private string $separator = '->';
 
     private LoggerInterface $logger;
 
@@ -35,7 +31,7 @@ final class Config
      *
      * @param array|string $params
      * @param array $options
-     * @param string $parseClass
+     * @param class-string<ParseInterface> $parseClass
      * @param bool $replace
      * @return void
      * @throws \Exception
@@ -47,11 +43,11 @@ final class Config
         if (!class_exists($parseClass)) {
             throw new \Exception(sprintf('Not found parse class: %s', $parseClass));
         }
-        /** @var  ParseInterface $parser */
         $parser = new $parseClass();
         $parser->setOptions($options);
         $parser->setLogger($this->logger);
 
+        /** @var string|string[] $config */
         foreach ($params as $namespace => $config) {
             if (is_int($namespace)) {
                 $namespace = null;
@@ -93,9 +89,15 @@ final class Config
                     $this->config[$namespace] = [];
                 }
                 if ($replace === true) {
-                    $this->config[$namespace] = \array_merge_recursive_distinct((array)$this->config[$namespace], $result);
+                    $this->config[$namespace] = \array_merge_recursive_distinct(
+                        (array)$this->config[$namespace],
+                        $result
+                    );
                 } else {
-                    $this->config[$namespace] = \array_merge_recursive_distinct($result, (array)$this->config[$namespace]);
+                    $this->config[$namespace] = \array_merge_recursive_distinct(
+                        $result,
+                        (array)$this->config[$namespace]
+                    );
                 }
             }
         }
@@ -104,7 +106,7 @@ final class Config
 
     /**
      *
-     * @param string $key
+     * @param string|null $key
      * @param mixed $default
      * @return mixed
      */
@@ -114,15 +116,62 @@ final class Config
             return $this->config;
         }
 
-        if (array_key_exists($key, $this->config)) {
-            return $this->config[$key];
+        $parts = explode($this->separator, $key);
+
+        try {
+            return $this->getValue($parts, $this->config);
+        } catch (Exception $e) {
+            return $default;
+        }
+    }
+
+    /**
+     * @param string|null $key
+     * @param mixed $default
+     * @return mixed
+     */
+    public function get(string $key = null, $default = null)
+    {
+        return $this->getConfig($key, $default);
+    }
+
+    /**
+     * @param string[] $parts
+     * @param mixed $array
+     * @return mixed
+     * @throws Exception
+     */
+    private function getValue(array $parts, $array)
+    {
+        if (!is_array($array)){
+            throw new Exception();
         }
 
-        return $default;
+        $key = array_shift($parts);
+
+        if (!array_key_exists($key, $array)) {
+            throw new Exception();
+        }
+
+        if (count($parts) > 0) {
+            return $this->getValue($parts, $array[$key]);
+        }
+
+        return $array[$key];
+
+
     }
 
     public function setLogger(LoggerInterface $logger): void
     {
         $this->logger = $logger;
+    }
+
+    /**
+     * @param string $separator
+     */
+    public function setSeparator(string $separator): void
+    {
+        $this->separator = $separator;
     }
 }

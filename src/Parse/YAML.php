@@ -9,6 +9,7 @@ use Symfony\Component\Yaml as Symfony;
 
 /**
  * @see https://symfony.com/doc/current/components/yaml.htm
+ * @psalm-suppress MixedReturnStatement, MixedInferredReturnType
  * @author Enjoys
  */
 class YAML extends Parse
@@ -16,9 +17,6 @@ class YAML extends Parse
 
     /**
      * {@inheritDoc}
-     *
-     * @param string $input
-     * @return mixed
      */
     protected function parseString(string $input)
     {
@@ -32,9 +30,6 @@ class YAML extends Parse
 
     /**
      * {@inheritDoc}
-     *
-     * @param string $filename
-     * @return mixed
      */
     protected function parseFile(string $filename)
     {

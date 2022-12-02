@@ -3,8 +3,19 @@
 [![Build Status](https://scrutinizer-ci.com/g/Enjoyzz/config/badges/build.png?b=master)](https://scrutinizer-ci.com/g/Enjoyzz/config/build-status/master)
 [![Code Coverage](https://scrutinizer-ci.com/g/Enjoyzz/config/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/Enjoyzz/config/?branch=master)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Enjoyzz/config/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Enjoyzz/config/?branch=master)
-# config
+
+# Install
+
+```
+composer require enjoys/config
+```
+
+# Usage
+
 ```php
-$config = new Config();
-$config->addConfig($filename);
+$config = new Enjoys\Config\Config();
+$config->addConfig($configFilepath1);
+$config->addConfig($configFilepath2, [], \Enjoys\Config\Config::YAML);
+$config->get('key', 'defaultValue'); //get from $array['key']
+$config->get('key->subKey'); //get from $array['key']'subKey']
 ```

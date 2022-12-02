@@ -14,12 +14,11 @@ class Json extends Parse
 {
 
     /**
-     *
-     * @param string $input
-     * @return mixed
+     * {@inheritDoc}
      */
     protected function parseString(string $input)
     {
+        /** @var array $result */
         $result = \json_decode(
             $input,
             true,
@@ -40,9 +39,7 @@ class Json extends Parse
     }
 
     /**
-     *
-     * @param string $filename
-     * @return mixed
+     * {@inheritDoc}
      */
     protected function parseFile(string $filename)
     {

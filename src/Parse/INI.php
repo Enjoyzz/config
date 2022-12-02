@@ -14,9 +14,7 @@ class INI extends Parse
 {
 
     /**
-     *
-     * @param string $input
-     * @return mixed
+     * {@inheritDoc}
      */
     protected function parseString(string $input)
     {
@@ -28,9 +26,7 @@ class INI extends Parse
     }
 
     /**
-     *
-     * @param string $filename
-     * @return mixed
+     * {@inheritDoc}
      */
     protected function parseFile(string $filename)
     {
