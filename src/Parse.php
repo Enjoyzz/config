@@ -38,7 +38,7 @@ abstract class Parse implements ParseInterface
     public function parse()
     {
         if (is_null($this->configSource)) {
-            $this->logger->error('Добавьте данные для парсинга');
+            $this->logger->notice('Add data for parsing');
             return null;
         }
 
