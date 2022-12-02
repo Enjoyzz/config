@@ -120,7 +120,7 @@ final class Config
 
         try {
             return $this->getValue($parts, $this->config);
-        } catch (\RuntimeException $e) {
+        } catch (Exception $e) {
             return $default;
         }
     }
@@ -139,17 +139,18 @@ final class Config
      * @param array $parts
      * @param mixed $array
      * @return mixed
+     * @throws Exception
      */
     private function getValue(array $parts, $array)
     {
         if (!is_array($array)){
-            throw new \RuntimeException();
+            throw new Exception();
         }
 
         $key = array_shift($parts);
 
         if (!array_key_exists($key, $array)) {
-            throw new \RuntimeException();
+            throw new Exception();
         }
 
         if (count($parts) > 0) {
