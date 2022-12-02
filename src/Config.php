@@ -24,6 +24,8 @@ final class Config
 
     private array $config = [];
 
+    private string $separator = '->';
+
     private LoggerInterface $logger;
 
     public function __construct(?LoggerInterface $logger = null)
@@ -93,9 +95,15 @@ final class Config
                     $this->config[$namespace] = [];
                 }
                 if ($replace === true) {
-                    $this->config[$namespace] = \array_merge_recursive_distinct((array)$this->config[$namespace], $result);
+                    $this->config[$namespace] = \array_merge_recursive_distinct(
+                        (array)$this->config[$namespace],
+                        $result
+                    );
                 } else {
-                    $this->config[$namespace] = \array_merge_recursive_distinct($result, (array)$this->config[$namespace]);
+                    $this->config[$namespace] = \array_merge_recursive_distinct(
+                        $result,
+                        (array)$this->config[$namespace]
+                    );
                 }
             }
         }
@@ -114,15 +122,51 @@ final class Config
             return $this->config;
         }
 
-        if (array_key_exists($key, $this->config)) {
-            return $this->config[$key];
+        $parts = explode($this->separator, $key);
+
+        try {
+            return $this->getValue($parts, $this->config);
+        } catch (\RuntimeException $e) {
+            return $default;
+        }
+    }
+
+    public function get(string $key = null, $default = null)
+    {
+        return $this->getConfig($key, $default);
+    }
+
+    private function getValue(array $parts, $array)
+    {
+        if (!is_array($array)){
+            throw new \RuntimeException();
         }
 
-        return $default;
+        $key = array_shift($parts);
+
+        if (!array_key_exists($key, $array)) {
+            throw new \RuntimeException();
+        }
+
+        if (count($parts) > 0) {
+            return $this->getValue($parts, $array[$key]);
+        }
+
+        return $array[$key];
+
+
     }
 
     public function setLogger(LoggerInterface $logger): void
     {
         $this->logger = $logger;
+    }
+
+    /**
+     * @param string $separator
+     */
+    public function setSeparator(string $separator): void
+    {
+        $this->separator = $separator;
     }
 }
