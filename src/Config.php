@@ -4,16 +4,10 @@ declare(strict_types=1);
 
 namespace Enjoys\Config;
 
-use Psr\Log\LoggerAwareInterface;
-use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
 
-/**
- * Description of Config
- * @author Enjoys
- */
 final class Config
 {
 
@@ -112,7 +106,7 @@ final class Config
 
     /**
      *
-     * @param string $key
+     * @param string|null $key
      * @param mixed $default
      * @return mixed
      */
@@ -131,11 +125,21 @@ final class Config
         }
     }
 
+    /**
+     * @param string|null $key
+     * @param mixed $default
+     * @return mixed
+     */
     public function get(string $key = null, $default = null)
     {
         return $this->getConfig($key, $default);
     }
 
+    /**
+     * @param array $parts
+     * @param mixed $array
+     * @return mixed
+     */
     private function getValue(array $parts, $array)
     {
         if (!is_array($array)){
