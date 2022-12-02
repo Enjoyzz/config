@@ -43,8 +43,9 @@ interface ParseInterface
      */
     public function addConfigSource(string $source): void;
 
+
     /**
-     * @return mixed
+     * @return array|false|null
      */
     public function parse();
 

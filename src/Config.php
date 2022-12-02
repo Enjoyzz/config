@@ -31,7 +31,7 @@ final class Config
      *
      * @param array|string $params
      * @param array $options
-     * @param string $parseClass
+     * @param class-string<ParseInterface> $parseClass
      * @param bool $replace
      * @return void
      * @throws \Exception
@@ -43,11 +43,11 @@ final class Config
         if (!class_exists($parseClass)) {
             throw new \Exception(sprintf('Not found parse class: %s', $parseClass));
         }
-        /** @var  ParseInterface $parser */
         $parser = new $parseClass();
         $parser->setOptions($options);
         $parser->setLogger($this->logger);
 
+        /** @var string|string[] $config */
         foreach ($params as $namespace => $config) {
             if (is_int($namespace)) {
                 $namespace = null;
@@ -136,7 +136,7 @@ final class Config
     }
 
     /**
-     * @param array $parts
+     * @param string[] $parts
      * @param mixed $array
      * @return mixed
      * @throws Exception

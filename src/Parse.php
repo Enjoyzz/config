@@ -10,7 +10,6 @@ use Psr\Log\NullLogger;
 
 /**
  * Description of Parse
- * @psalm-suppress PropertyNotSetInConstructor
  * @author Enjoys
  */
 abstract class Parse implements ParseInterface
@@ -35,6 +34,9 @@ abstract class Parse implements ParseInterface
         $this->configSource = $source;
     }
 
+    /**
+     * @return array|false|null
+     */
     public function parse()
     {
         if (is_null($this->configSource)) {
@@ -51,13 +53,13 @@ abstract class Parse implements ParseInterface
 
     /**
      * @param string $input
-     * @return mixed
+     * @return array|null|false
      */
     abstract protected function parseString(string $input);
 
     /**
      * @param string $filename
-     * @return mixed
+     * @return array|null|false
      */
     abstract protected function parseFile(string $filename);
 }
