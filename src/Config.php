@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Enjoys\Config;
 
+use Enjoys\Config\ValueHandler\EnvValueHandler;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
@@ -17,6 +18,10 @@ final class Config
 
 
     private array $config = [];
+
+    private array $valueHandlers = [
+        EnvValueHandler::class
+    ];
 
     private string $separator = '->';
 
@@ -140,6 +145,7 @@ final class Config
      * @param mixed $array
      * @return mixed
      * @throws Exception
+     * @psalm-suppress MixedAssignment, MixedArgument
      */
     private function getValue(array $parts, $array)
     {
@@ -154,7 +160,12 @@ final class Config
         }
 
         if (count($parts) > 0) {
-            return $this->getValue($parts, $array[$key]);
+            $returnValue = $this->getValue($parts, $array[$key]);
+            /** @var class-string<ValueHandlerInterface> $valueHandler */
+            foreach ($this->valueHandlers as $valueHandler){
+                $returnValue = (new $valueHandler())->handle($returnValue);
+            }
+            return $returnValue;
         }
 
         return $array[$key];
