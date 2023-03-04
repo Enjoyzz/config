@@ -21,7 +21,10 @@ final class EnvValueHandler implements ValueHandlerInterface
             return preg_replace_callback(
                 '/(%)([A-Z_]+)(%)/',
                 function ($matches) {
-                    return $_ENV[$matches[2]] ?? $_SERVER[$matches[2]] ?? (getenv($matches[2]) ?: $matches[2]);
+                    return
+                        $_ENV[$matches[2]]
+                        ?? $_SERVER[$matches[2]]
+                        ?? (getenv($matches[2]) ?: $matches[1].$matches[2].$matches[3]);
                 },
                 $value
             );

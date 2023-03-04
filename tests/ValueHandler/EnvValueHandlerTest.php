@@ -43,6 +43,7 @@ class EnvValueHandlerTest extends TestCase
             ['yyy/XXX/test', 'yyy/%TEST%/test'],
             [['XXX/test', 'yyy/XXX/test'], ['%TEST%/test', 'yyy/%TEST%/test']],
             ['XXX/XXX/XXX/XXX/test', '%TEST%/%TEST%/%TEST%/%TEST%/test'],
+            ['%UNDEFINED_ENV%', '%UNDEFINED_ENV%']
         ];
     }
 }
