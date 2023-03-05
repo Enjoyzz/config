@@ -58,11 +58,7 @@ abstract class Parse implements ParseInterface
         return $this->parseFile($this->configSource);
     }
 
-    /**
-     * @param string $data
-     * @return string
-     */
-    private function applyValueHandlers($data)
+    private function applyValueHandlers(string $data): string
     {
         /** @var class-string<ValueHandlerInterface> $valueHandler */
         foreach ($this->valueHandlers as $valueHandler) {
