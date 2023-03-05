@@ -11,12 +11,11 @@ use Enjoys\Config\ValueHandlerInterface;
 final class DefinedConstantsValueHandler implements ValueHandlerInterface
 {
 
-    public function handle($input)
+    /**
+     * @psalm-suppress MixedArgumentTypeCoercion
+     */
+    public function handle(string $input): string
     {
-        if (!is_string($input)) {
-            return $input;
-        }
-
         return preg_replace_callback(
             '/(%)(.+)(%)/',
             function ($matches) {

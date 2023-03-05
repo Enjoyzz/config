@@ -9,9 +9,5 @@ namespace Enjoys\Config;
 interface ValueHandlerInterface
 {
 
-    /**
-     * @param mixed $input
-     * @return  mixed
-     */
-    public function handle($input);
+    public function handle(string $input): string;
 }

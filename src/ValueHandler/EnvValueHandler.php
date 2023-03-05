@@ -11,19 +11,15 @@ use Enjoys\Config\ValueHandlerInterface;
 final class EnvValueHandler implements ValueHandlerInterface
 {
     /**
-     * @param mixed $input
-     * @return  mixed
+
      * @psalm-suppress InvalidArrayOffset, MixedArgumentTypeCoercion
      */
-    public function handle($input)
+    public function handle(string $input): string
     {
-        if (!is_string($input)) {
-            return $input;
-        }
 
         return preg_replace_callback(
             '/(%)([A-Z_]+)(%)/',
-            function ($matches) {
+            function (array $matches) {
                 return
                     $_ENV[$matches[2]]
                     ?? $_SERVER[$matches[2]]
