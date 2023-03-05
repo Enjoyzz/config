@@ -25,15 +25,4 @@ class INI extends Parse
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    protected function parseFile(string $filename)
-    {
-        return parse_ini_file(
-            $filename,
-            (bool) $this->getOption('process_sections', true),
-            (int) $this->getOption('scanner_mode', \INI_SCANNER_TYPED)
-        );
-    }
 }

@@ -25,9 +25,9 @@ class Json extends Parse
             (int)$this->getOption('depth', 512),
             (int)$this->getOption('options', 0)
         );
-        
+
         //Clear the most recent error
-        \error_clear_last();        
+        \error_clear_last();
 
         if (\json_last_error() === JSON_ERROR_NONE) {
             return $result;
@@ -38,12 +38,4 @@ class Json extends Parse
         return null;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    protected function parseFile(string $filename)
-    {
-        $json = file_get_contents($filename);
-        return $this->parseString($json);
-    }
 }

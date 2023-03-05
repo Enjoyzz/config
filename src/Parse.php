@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Enjoys\Config;
 
+use Enjoys\Config\ValueHandler\DefinedConstantsValueHandler;
+use Enjoys\Config\ValueHandler\EnvValueHandler;
 use Enjoys\Traits\Options;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
@@ -18,6 +20,11 @@ abstract class Parse implements ParseInterface
 
     private ?string $configSource = null;
     protected LoggerInterface $logger;
+
+    private array $valueHandlers = [
+        EnvValueHandler::class,
+        DefinedConstantsValueHandler::class
+    ];
 
     public function __construct()
     {
@@ -45,10 +52,30 @@ abstract class Parse implements ParseInterface
         }
 
         if (!is_file($this->configSource)) {
-            return $this->parseString($this->configSource);
+            return $this->parseString($this->applyValueHandlers($this->configSource));
         }
 
         return $this->parseFile($this->configSource);
+    }
+
+    protected function applyValueHandlers($data)
+    {
+        /** @var class-string<ValueHandlerInterface> $valueHandler */
+        foreach ($this->valueHandlers as $valueHandler) {
+            $data = (new $valueHandler())->handle($data);
+        }
+      //  var_dump($data);
+        return $data;
+    }
+
+    /**
+     * @param string $filename
+     * @return array|null|false
+     */
+    private function parseFile(string $filename)
+    {
+        $data = file_get_contents($filename);
+        return $this->parseString($this->applyValueHandlers($data));
     }
 
     /**
@@ -57,9 +84,5 @@ abstract class Parse implements ParseInterface
      */
     abstract protected function parseString(string $input);
 
-    /**
-     * @param string $filename
-     * @return array|null|false
-     */
-    abstract protected function parseFile(string $filename);
+
 }

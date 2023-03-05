@@ -10,8 +10,8 @@ interface ValueHandlerInterface
 {
 
     /**
-     * @param mixed $value
+     * @param mixed $input
      * @return  mixed
      */
-    public function handle($value);
+    public function handle($input);
 }

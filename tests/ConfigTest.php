@@ -15,6 +15,17 @@ use PHPUnit\Framework\TestCase;
 class ConfigTest extends TestCase
 {
 
+    protected function setUp(): void
+    {
+        $_ENV['TEST'] = 'XXX';
+        define('NOT_ENV', '42');
+    }
+
+    protected function tearDown(): void
+    {
+        unset($_ENV['TEST']);
+    }
+
     public function test1()
     {
         $config = new Config();
@@ -109,7 +120,6 @@ class ConfigTest extends TestCase
 
     public function testReplaceRecursive()
     {
-
         $test1 = <<<YAML
 bar:
     foo:
@@ -156,4 +166,24 @@ YAML;
         $config->addConfig(['test' => 'foo = baz']);
         $this->assertSame(false, $config->get('test->foo->bar', false));
     }
+
+    public function testValueHandlersYaml()
+    {
+        $yaml = <<<YAML
+env: "%TEST%"
+undefined_env: "%UNDEFINED_ENV%"
+not_env: %NOT_ENV%
+YAML;
+
+        $expect = [
+            'env' => 'XXX',
+            'undefined_env' => '%UNDEFINED_ENV%',
+            'not_env' => 42
+        ];
+
+        $config = new Config(new LoggerSimple());
+        $config->addConfig(['test' => $yaml], [], Config::YAML);
+        $this->assertSame($expect, $config->get('test'));
+    }
+
 }

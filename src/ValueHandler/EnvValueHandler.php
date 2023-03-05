@@ -11,24 +11,25 @@ use Enjoys\Config\ValueHandlerInterface;
 final class EnvValueHandler implements ValueHandlerInterface
 {
     /**
-     * @param mixed $value
+     * @param mixed $input
      * @return  mixed
      * @psalm-suppress InvalidArrayOffset, MixedArgumentTypeCoercion
      */
-    public function handle($value)
+    public function handle($input)
     {
-        if (is_array($value) || is_string($value)) {
-            return preg_replace_callback(
-                '/(%)([A-Z_]+)(%)/',
-                function ($matches) {
-                    return
-                        $_ENV[$matches[2]]
-                        ?? $_SERVER[$matches[2]]
-                        ?? (getenv($matches[2]) ?: $matches[1].$matches[2].$matches[3]);
-                },
-                $value
-            );
+        if (!is_string($input)) {
+            return $input;
         }
-        return $value;
+
+        return preg_replace_callback(
+            '/(%)([A-Z_]+)(%)/',
+            function ($matches) {
+                return
+                    $_ENV[$matches[2]]
+                    ?? $_SERVER[$matches[2]]
+                    ?? (getenv($matches[2]) ?: $matches[1] . $matches[2] . $matches[3]);
+            },
+            $input
+        );
     }
 }

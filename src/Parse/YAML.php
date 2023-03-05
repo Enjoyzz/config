@@ -28,16 +28,4 @@ class YAML extends Parse
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    protected function parseFile(string $filename)
-    {
-        try {
-            return Symfony\Yaml::parseFile($filename, (int)$this->getOption('flags', 0));
-        } catch (Symfony\Exception\ParseException $e) {
-            $this->logger->error($e->getMessage());
-            return null;
-        }
-    }
 }
