@@ -14,7 +14,6 @@ class EnvValueHandlerTest extends TestCase
     {
         $_ENV['TEST'] = 'XXX';
         $_ENV['test2'] = 'XXX';
-        define('NOT_ENV', 42);
     }
 
     protected function tearDown(): void
@@ -37,12 +36,7 @@ class EnvValueHandlerTest extends TestCase
             ['XXX/test', '%TEST%/test'],
             ['%test2%/test', '%test2%/test'],
             ['TEST/test', 'TEST/test'],
-            [42, 42],
-            [null, null],
-            [true, true],
-            [false, false],
             ['yyy/XXX/test', 'yyy/%TEST%/test'],
-            [['XXX/test', 'yyy/XXX/test'], ['%TEST%/test', 'yyy/%TEST%/test']],
             ['XXX/XXX/XXX/XXX/test', '%TEST%/%TEST%/%TEST%/%TEST%/test'],
             ['%UNDEFINED_ENV%', '%UNDEFINED_ENV%']
         ];

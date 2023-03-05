@@ -18,7 +18,7 @@ class ConfigTest extends TestCase
     protected function setUp(): void
     {
         $_ENV['TEST'] = 'XXX';
-        define('NOT_ENV', '42');
+
     }
 
     protected function tearDown(): void
@@ -169,6 +169,8 @@ YAML;
 
     public function testValueHandlersYaml()
     {
+        define('NOT_ENV', '42');
+
         $yaml = <<<YAML
 env: "%TEST%"
 undefined_env: "%UNDEFINED_ENV%"
