@@ -6,17 +6,15 @@ namespace Enjoys\Config;
 
 use Enjoys\Config\ValueHandler\DefinedConstantsValueHandler;
 use Enjoys\Config\ValueHandler\EnvValueHandler;
-use Enjoys\Traits\Options;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
-/**
- * Description of Parse
- * @author Enjoys
- */
 abstract class Parse implements ParseInterface
 {
-    use Options;
+    /**
+     * @var array<string, mixed>
+     */
+    private array $options = [];
 
     private ?string $configSource = null;
     protected LoggerInterface $logger;
@@ -35,6 +33,50 @@ abstract class Parse implements ParseInterface
     {
         $this->logger = $logger;
     }
+
+
+    /**
+     * @param array<string, mixed> $options
+     * @return $this
+     * @psalm-suppress MixedAssignment
+     */
+    public function setOptions(array $options = []): self
+    {
+        foreach ($options as $key => $value) {
+            $this->setOption($key, $value);
+        }
+        return $this;
+    }
+
+    /**
+     * @param mixed $value
+     */
+    public function setOption(string $key, $value): self
+    {
+        $this->options[$key] = $value;
+        return $this;
+    }
+
+    /**
+     * @param mixed $defaults
+     * @return mixed
+     */
+    public function getOption(string $key, $defaults = null)
+    {
+        if (array_key_exists($key, $this->options)) {
+            return $this->options[$key];
+        }
+        return $defaults;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function getOptions(): array
+    {
+        return $this->options;
+    }
+
 
     public function addConfigSource(string $source): void
     {
@@ -64,7 +106,7 @@ abstract class Parse implements ParseInterface
         foreach ($this->valueHandlers as $valueHandler) {
             $data = (new $valueHandler())->handle($data);
         }
-      //  var_dump($data);
+        //  var_dump($data);
         return $data;
     }
 
