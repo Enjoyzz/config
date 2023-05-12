@@ -10,7 +10,6 @@
   ],
   "require": {
     "php": "^7.4|^8.0",
-    "enjoys/traits": "^1.0",
     "symfony/yaml": "^5.4|^6.0",
     "psr/log": "^1.0",
     "ext-json": "*",
