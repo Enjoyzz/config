@@ -17,19 +17,15 @@ abstract class Parse implements ParseInterface
     private array $options = [];
 
     private ?string $configSource = null;
-    protected LoggerInterface $logger;
+    protected ?LoggerInterface $logger = null;
 
     private array $valueHandlers = [
         EnvValueHandler::class,
         DefinedConstantsValueHandler::class
     ];
 
-    public function __construct()
-    {
-        $this->logger = new NullLogger();
-    }
 
-    public function setLogger(LoggerInterface $logger)
+    public function setLogger(?LoggerInterface $logger)
     {
         $this->logger = $logger;
     }
@@ -89,7 +85,9 @@ abstract class Parse implements ParseInterface
     public function parse()
     {
         if (is_null($this->configSource)) {
-            $this->logger->notice('Add data for parsing');
+            if ($this->logger instanceof LoggerInterface){
+                $this->logger->notice('Add data for parsing');
+            }
             return null;
         }
 

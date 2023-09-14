@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Enjoys\Config\Parse;
 
 use Enjoys\Config\Parse;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Yaml as Symfony;
 
 /**
@@ -23,7 +24,9 @@ class YAML extends Parse
         try {
             return Symfony\Yaml::parse($input, (int)$this->getOption('flags', 0));
         } catch (Symfony\Exception\ParseException $e) {
-            $this->logger->error($e->getMessage());
+            if ($this->logger instanceof LoggerInterface) {
+                $this->logger->error($e->getMessage());
+            }
             return null;
         }
     }

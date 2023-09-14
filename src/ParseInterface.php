@@ -53,8 +53,8 @@ interface ParseInterface
 
     /**
      *
-     * @param LoggerInterface $logger
+     * @param null|LoggerInterface $logger
      * @return void
      */
-    public function setLogger(LoggerInterface $logger);
+    public function setLogger(?LoggerInterface $logger);
 }

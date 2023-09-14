@@ -24,11 +24,11 @@ final class Config
 
     private string $separator = '->';
 
-    private LoggerInterface $logger;
+    private ?LoggerInterface $logger;
 
     public function __construct(?LoggerInterface $logger = null)
     {
-        $this->logger = $logger ?? new NullLogger();
+        $this->logger = $logger;
     }
 
     /**
@@ -164,7 +164,7 @@ final class Config
         return $array[$key];
     }
 
-    public function setLogger(LoggerInterface $logger): void
+    public function setLogger(?LoggerInterface $logger): void
     {
         $this->logger = $logger;
     }
