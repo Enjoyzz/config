@@ -18,6 +18,7 @@ class YAML extends Parse
 
     /**
      * {@inheritDoc}
+     * @psalm-suppress ReservedWord
      */
     protected function parseString(string $input)
     {
