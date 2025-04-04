@@ -59,22 +59,31 @@ phpversion[] = "5.3"
 
 urls[svn] = "http://svn.php.net"
 urls[git] = "http://git.php.net"
-                
+
 INI;
 
         $parser = new \Enjoys\Config\Parse\INI();
         $parser->addConfigSource($config);
         $this->assertSame(['one' => 1,'five' => 5,'animal' => 'BIRD'], $parser->parse()['first_section']);
     }
-    
+
      public function test_2(){
          $parser = new \Enjoys\Config\Parse\INI();
          $parser->addConfigSource(__DIR__.'/../fixtures/ini/file1.ini');
-         $this->assertSame('3', $parser->parse()['three']);
-         $this->assertSame('4', $parser->parse()['four']);
-         $this->assertSame('5', $parser->parse()['five']);
-         $this->assertSame('-2', $parser->parse()['negative_two']);
-         $this->assertSame('7', $parser->parse()['seven']);
+         if (\PHP_VERSION_ID < 80300) {
+             $this->assertSame('3', $parser->parse()['three']);
+             $this->assertSame('4', $parser->parse()['four']);
+             $this->assertSame('5', $parser->parse()['five']);
+             $this->assertSame('-2', $parser->parse()['negative_two']);
+             $this->assertSame('7', $parser->parse()['seven']);
+         }else{
+             $this->assertSame(3, $parser->parse()['three']);
+             $this->assertSame(4, $parser->parse()['four']);
+             $this->assertSame(5, $parser->parse()['five']);
+             $this->assertSame(-2, $parser->parse()['negative_two']);
+             $this->assertSame(7, $parser->parse()['seven']);
+         }
+
          $this->assertSame('\n', $parser->parse()['newline_is']);
          $this->assertSame('Она сказала "Именно моя точка зрения".', $parser->parse()['with quotes']);
          //$this->assertSame($_SERVER['PATH'], $parser->parse()['path']);
@@ -88,18 +97,18 @@ INI;
          $parser->addConfigSource(__DIR__.'/../fixtures/ini/file2.ini');
          $this->assertSame('value', $parser->parse()['key']);
          $this->assertSame(true, $parser->parse()['key2']);
-         
+
          $parser->setOptions([
              'scanner_mode' => \INI_SCANNER_RAW
          ]);
          $this->assertSame('on', $parser->parse()['key2']);
-         
+
          $parser->setOptions([
              'process_sections' => true
          ]);
          $this->assertSame('value', $parser->parse()['section']['key']);
-         
-         
+
+
 
      }
 }
