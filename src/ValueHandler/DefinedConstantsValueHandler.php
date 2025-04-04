@@ -25,6 +25,6 @@ final class DefinedConstantsValueHandler implements ValueHandlerInterface
                 return $matches[1] . $matches[2] . $matches[3];
             },
             $input
-        );
+        ) ?? '';
     }
 }

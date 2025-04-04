@@ -16,6 +16,7 @@ class Json extends Parse
 
     /**
      * {@inheritDoc}
+     * @psalm-suppress ArgumentTypeCoercion
      */
     protected function parseString(string $input)
     {
