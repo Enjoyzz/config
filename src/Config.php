@@ -116,7 +116,7 @@ final class Config
      * @param mixed $default
      * @return mixed
      */
-    public function getConfig(string $key = null, $default = null)
+    public function getConfig(?string $key = null, $default = null)
     {
         if ($key === null) {
             return $this->config;
@@ -136,7 +136,7 @@ final class Config
      * @param mixed $default
      * @return mixed
      */
-    public function get(string $key = null, $default = null)
+    public function get(?string $key = null, $default = null)
     {
         return $this->getConfig($key, $default);
     }
