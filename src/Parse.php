@@ -115,7 +115,7 @@ abstract class Parse implements ParseInterface
     private function parseFile(string $filename)
     {
         $data = file_get_contents($filename);
-        return $this->parseString($this->applyValueHandlers($data));
+        return $this->parseString($this->applyValueHandlers($data === false ? '' : $data));
     }
 
     /**

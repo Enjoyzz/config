@@ -21,7 +21,9 @@ final class Config
     private array $config = [];
 
 
-
+    /**
+     * @var non-empty-string
+     */
     private string $separator = '->';
 
     private ?LoggerInterface $logger;
@@ -114,7 +116,7 @@ final class Config
      * @param mixed $default
      * @return mixed
      */
-    public function getConfig(string $key = null, $default = null)
+    public function getConfig(?string $key = null, $default = null)
     {
         if ($key === null) {
             return $this->config;
@@ -134,7 +136,7 @@ final class Config
      * @param mixed $default
      * @return mixed
      */
-    public function get(string $key = null, $default = null)
+    public function get(?string $key = null, $default = null)
     {
         return $this->getConfig($key, $default);
     }
@@ -153,7 +155,7 @@ final class Config
 
         $key = array_shift($parts);
 
-        if (!array_key_exists($key, $array)) {
+        if ($key === null || !array_key_exists($key, $array)) {
             throw new Exception();
         }
 
@@ -170,7 +172,7 @@ final class Config
     }
 
     /**
-     * @param string $separator
+     * @param non-empty-string $separator
      */
     public function setSeparator(string $separator): void
     {
