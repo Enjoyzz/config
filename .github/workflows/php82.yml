@@ -1,4 +1,4 @@
-name: php 8.0
+name: php 8.2
 
 on:
   push:
