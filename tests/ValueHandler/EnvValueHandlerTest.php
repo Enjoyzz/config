@@ -14,11 +14,12 @@ class EnvValueHandlerTest extends TestCase
     {
         $_ENV['TEST'] = 'XXX';
         $_ENV['test2'] = 'XXX';
+        $_ENV['TEST3'] = 'XXX3';
     }
 
     protected function tearDown(): void
     {
-        unset($_ENV['TEST'], $_ENV['test2']);
+        unset($_ENV['TEST'], $_ENV['test2'], $_ENV['TEST3']);
     }
 
     /**
@@ -37,6 +38,7 @@ class EnvValueHandlerTest extends TestCase
             ['%test2%/test', '%test2%/test'],
             ['TEST/test', 'TEST/test'],
             ['yyy/XXX/test', 'yyy/%TEST%/test'],
+            ['yyy/XXX3/test', 'yyy/%TEST3%/test'],
             ['XXX/XXX/XXX/XXX/test', '%TEST%/%TEST%/%TEST%/%TEST%/test'],
             ['%UNDEFINED_ENV%', '%UNDEFINED_ENV%']
         ];
